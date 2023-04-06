@@ -130,7 +130,8 @@ dmypy.json
 
 .python-version
 .idea/
-postgresql/*
+etl/postgresql/*
+etl/elasticsearch/*
 #data/static/*
 media/*
 *.DS_Store
