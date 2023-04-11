@@ -1,4 +1,5 @@
 import os
+import time
 from contextlib import closing
 
 from extractors.film_work import FilmworkExtractor
@@ -48,3 +49,4 @@ if __name__ == '__main__':
                 documents = data_transform.transform_data(data)
                 loader.bulk_load_movies(documents)
                 film_work_extr.update_state()
+            # time.sleep(1000)
