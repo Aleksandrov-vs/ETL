@@ -39,7 +39,7 @@ class BasePostgresExtractor:
         self.last_modified_in_elastic = None
         self.state_key_name = ''
 
-    def create_state(self):
+    def create_state(self, table_name: str):
         """
         если в redis нет нужных state-> создаем
         дальше добавляем атрибут с значением ко всем, кто наследуется
@@ -49,7 +49,7 @@ class BasePostgresExtractor:
 
         if last_modif is None:
             self.last_modified_in_elastic = self.get_earliest_time(
-                self.state_key_name
+                table_name
             )
             self.redis_conn.set(
                 self.state_key_name,

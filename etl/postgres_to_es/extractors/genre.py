@@ -13,7 +13,7 @@ class GenreExtractor(BasePostgresExtractor):
         super().__init__(redis_conn)
         self.state_key_name = 'g_modified'
 
-        super().create_state()
+        super().create_state('genre')
 
     def get_new_genres(self) -> Union[List[RealDictRow]]:
         return super().get_new_rows('genre', limit_value=10)

@@ -15,7 +15,7 @@ class PersonExtract(BasePostgresExtractor):
     def __init__(self, redis_conn: redis_connection):
         super().__init__(redis_conn)
         self.state_key_name = 'p_modified'
-        super().create_state()
+        super().create_state('person')
 
     def get_new_persons(self):
         return super().get_new_rows('person', limit_value=100)

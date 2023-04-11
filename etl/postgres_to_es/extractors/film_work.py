@@ -16,7 +16,7 @@ class FilmworkExtractor(BasePostgresExtractor):
         super().__init__(redis_conn)
         self.state_key_name = 'fw_modified'
 
-        super().create_state()
+        super().create_state('film_work')
 
     def get_film_work_ids_for_update(self) -> List[UUID] | None:
         new_film_work = super().get_new_rows('film_work', 100)
