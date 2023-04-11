@@ -10,7 +10,7 @@ ELASTIC_PORT = os.getenv('ELASTIC_PORT')
 
 es = Elasticsearch(f'{ELASTIC_URL}:{ELASTIC_PORT}')
 try:
-    es.options(ignore_status=[400, 404]).indices.delete(index='movies')
+    # es.options(ignore_status=[400, 404]).indices.delete(index='movies')
     es_settings = {
         "refresh_interval": "1s",
         "analysis": {
