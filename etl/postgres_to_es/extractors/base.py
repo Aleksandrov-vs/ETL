@@ -34,11 +34,18 @@ class BasePostgresExtractor:
     def __init__(self, redis_conn: redis_connection):
         self.redis_conn = redis_conn
 
+        # максимальное значение modified в пачке данных которые будут загружены в elastic
         self.max_modified_in_bundle = None
+        # максимальное значение modified в данных которое уже загружено в elastic
         self.last_modified_in_elastic = None
         self.state_key_name = ''
 
     def create_state(self):
+        """
+        если в redis нет нужных state-> создаем
+        дальше добавляем атрибут с значением ко всем, кто наследуется
+        :return:
+        """
         last_modif = self.redis_conn.get(self.state_key_name)
 
         if last_modif is None:
@@ -64,6 +71,13 @@ class BasePostgresExtractor:
     def bundle_extract_rows(
             self, query: str, values: List, count_row: int = 10
     ):
+        """
+
+        :param query: sql запрос
+        :param values: значения, которые надо подставить
+        :param count_row: количество строк в одной пачке
+        :return:
+        """
         with closing(
             psycopg2.connect(**dsl, connection_factory=RealDictConnection)
         ) as pg_conn:
@@ -87,6 +101,12 @@ class BasePostgresExtractor:
         **BACKOFF_CONF
     )
     def run_sql_query(self, query: Union[str, Composed], values: list):
+        """
+
+        :param query: sql запрос
+        :param values: значения, которые надо подставить
+        :return:
+        """
         with closing(
             psycopg2.connect(**dsl, connection_factory=RealDictConnection)
         ) as pg_conn:
@@ -102,6 +122,12 @@ class BasePostgresExtractor:
 
     def get_new_rows(self, table_name: str, limit_value: int = 100) \
             -> Union[List[RealDictRow], None]:
+        """
+        достаем пачку данных из таблицы, отсортированной по полю modified
+        :param table_name: название таблицы из которой извлекаем строки
+        :param limit_value: ограничение
+        :return: возвращаем None, если новых данных нет
+        """
         query = sql.SQL(
             """
             SELECT id, modified
@@ -130,7 +156,14 @@ class BasePostgresExtractor:
             table_name: str, m2m_table_name: str,
             field_to_join: str
             ) -> List[UUID]:
+        """
 
+        :param new_entitys: набор строк из таблицы (например из таблицы person)
+        :param table_name: название таблицы
+        :param m2m_table_name: название таблицы для join
+        :param field_to_join: поле для join
+        :return:
+        """
         new_ids = list(map(lambda p: p['id'], new_entitys))
         query = sql.SQL(
             """
