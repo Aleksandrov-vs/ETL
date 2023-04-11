@@ -49,7 +49,7 @@ class BasePostgresExtractor:
 
         if last_modif is None:
             self.last_modified_in_elastic = self.get_earliest_time(
-                'film_work'
+                self.state_key_name
             )
             self.redis_conn.set(
                 self.state_key_name,
