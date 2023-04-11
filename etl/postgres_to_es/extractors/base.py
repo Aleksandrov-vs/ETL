@@ -2,16 +2,15 @@ import datetime
 import os
 from contextlib import closing
 from typing import List, Union
-
-import backoff as backoff
-import psycopg2
 from uuid import UUID
 
+import backoff as backoff
 import dotenv
-from redis import connection as redis_connection
-from psycopg2 import sql, OperationalError
-from psycopg2.extras import RealDictRow, RealDictConnection
+import psycopg2
+from psycopg2 import OperationalError, sql
+from psycopg2.extras import RealDictConnection, RealDictRow
 from psycopg2.sql import Composed
+from redis import connection as redis_connection
 
 dotenv.load_dotenv()
 

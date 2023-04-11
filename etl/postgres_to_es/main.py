@@ -2,14 +2,13 @@ import os
 import time
 from contextlib import closing
 
+import redis
 from extractors.film_work import FilmworkExtractor
 from extractors.genre import GenreExtractor
 from extractors.person import PersonExtract
-
-import redis
+from load_dotenv import load_dotenv
 from loader import ElasticsearchLoader
 from transformer import DataTransform
-from load_dotenv import load_dotenv
 
 load_dotenv()
 

@@ -1,14 +1,12 @@
-import pprint
 import os
+import pprint
 from typing import List
 
 import backoff as backoff
 from elastic_transport import ConnectionError, ConnectionTimeout
 from elasticsearch import Elasticsearch, helpers
 from load_dotenv import load_dotenv
-
 from models import Filmwork
-
 
 load_dotenv()
 
