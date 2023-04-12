@@ -1,14 +1,15 @@
 import sqlite3
-import os
 from contextlib import contextmanager, closing
 
-import dotenv
 import psycopg2
 from psycopg2.extensions import connection as _connection
 from psycopg2.extras import DictCursor
 
 from data_extractor import SQLiteExtractor
 from data_saver import PostgresSaver
+from config import PostgresSettings
+
+postgres_settings = PostgresSettings()
 
 
 @contextmanager
@@ -17,9 +18,6 @@ def sqlite_conn_context(db_path: str):
     conn.row_factory = sqlite3.Row
     yield conn
     conn.close()
-
-
-dotenv.load_dotenv()
 
 
 def load_from_sqlite(connection: sqlite3.Connection, pg_conn: _connection):
@@ -45,15 +43,8 @@ def create_schema(pg_conn: _connection):
 
 
 if __name__ == '__main__':
-    dsl = {
-        'dbname': os.getenv('POSTGRES_DB'),
-        'user': os.getenv('POSTGRES_USER'),
-        'password': os.getenv('POSTGRES_PASSWORD'),
-        'host': os.getenv('POSTGRES_HOST'),
-        'port': os.getenv('POSTGRES_PORT'),
-    }
     with sqlite_conn_context('db.sqlite') as sqlite_conn, \
-            closing(psycopg2.connect(**dsl, cursor_factory=DictCursor)) as pg_conn:
+            closing(psycopg2.connect(**postgres_settings.dict(), cursor_factory=DictCursor)) as pg_conn:
 
         create_schema(pg_conn)
 
