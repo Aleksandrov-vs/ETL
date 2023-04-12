@@ -50,9 +50,11 @@
 
 ### чтобы запустить проект:
 1. создайте .env файл рядом с .env.example
-2. соберите контейнеры `docker-compose build`
-3. запустите контейнеры `docker-compose up`
-4. для тестирования можно запустить все контейнеры отдельно
+2. если хотите залить данные для теста: `docker-compose -f docker-compose.create_db.yaml up --build`
+ не забудьте остановить контейнеры. Так как том с данными монтируются в оба контейнера с postgres- данные появятся.
+3. соберите контейнеры `docker-compose -f docker-compose.yaml build`
+4. запустите контейнеры `docker-compose -f docker-compose.yaml up`
+5. для тестирования можно запустить все контейнеры отдельно
 например `docker-compose up redis`
 
 ### Алгоритм работы:
