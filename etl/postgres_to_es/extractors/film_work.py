@@ -6,14 +6,16 @@ import dotenv
 from redis import connection as redis_connection
 
 from .base import BasePostgresExtractor
+from storages import State
+
 
 dotenv.load_dotenv()
 
 
 class FilmworkExtractor(BasePostgresExtractor):
 
-    def __init__(self, redis_conn: redis_connection):
-        super().__init__(redis_conn)
+    def __init__(self, state: State):
+        super().__init__(state)
         self.state_key_name = 'fw_modified'
 
         super().create_state('film_work')

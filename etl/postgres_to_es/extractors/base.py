@@ -4,6 +4,7 @@ from typing import List, Union
 from uuid import UUID
 
 from config import PostgresSettings, BackoffConf
+from storages import State
 
 import backoff as backoff
 import dotenv
@@ -11,19 +12,17 @@ import psycopg2
 from psycopg2 import OperationalError, sql
 from psycopg2.extras import RealDictConnection, RealDictRow
 from psycopg2.sql import Composed
-from redis import connection as redis_connection
 
 dotenv.load_dotenv()
 
 postgres_settings = PostgresSettings()
-
 backoff_conf = BackoffConf()
 
 
 class BasePostgresExtractor:
 
-    def __init__(self, redis_conn: redis_connection):
-        self.redis_conn = redis_conn
+    def __init__(self, state: State):
+        self.state = state
 
         # максимальное значение modified в пачке данных которые будут загружены в elastic
         self.max_modified_in_bundle = None
@@ -37,13 +36,13 @@ class BasePostgresExtractor:
         дальше добавляем атрибут с значением ко всем, кто наследуется
         :return:
         """
-        last_modif = self.redis_conn.get(self.state_key_name)
+        last_modif = self.state.get_state(self.state_key_name)
 
         if last_modif is None:
             self.last_modified_in_elastic = self.get_earliest_time(
                 table_name
             )
-            self.redis_conn.set(
+            self.state.set_state(
                 self.state_key_name,
                 str(self.last_modified_in_elastic)
             )
@@ -215,8 +214,8 @@ class BasePostgresExtractor:
         """
         return self.bundle_extract_rows(query, film_work_ids)
 
-    def update_state(self):
-        self.redis_conn.set(
+    def update_modified_state(self):
+        self.state.set_state(
             self.state_key_name,
             str(self.max_modified_in_bundle)
         )
