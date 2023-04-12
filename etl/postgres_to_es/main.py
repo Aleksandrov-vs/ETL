@@ -34,6 +34,7 @@ if __name__ == '__main__':
                 documents = data_transform.transform_data(data)
                 loader.bulk_load_movies(documents)
                 person_extr.update_state()
+            time.sleep(5)
 
             for data in genre_extr.extract_genres():
                 if data is None:
@@ -41,6 +42,7 @@ if __name__ == '__main__':
                 documents = data_transform.transform_data(data)
                 loader.bulk_load_movies(documents)
                 genre_extr.update_state()
+            time.sleep(5)
 
             for data in film_work_extr.extract_filmwork():
                 if data is None:
@@ -48,4 +50,4 @@ if __name__ == '__main__':
                 documents = data_transform.transform_data(data)
                 loader.bulk_load_movies(documents)
                 film_work_extr.update_state()
-            # time.sleep(1000)
+            time.sleep(5)
