@@ -2,24 +2,20 @@ import os
 import time
 from contextlib import closing
 
+from config import RedisSettings
+
 import redis
 from extractors.film_work import FilmworkExtractor
 from extractors.genre import GenreExtractor
 from extractors.person import PersonExtract
-from load_dotenv import load_dotenv
 from loader import ElasticsearchLoader
 from transformer import DataTransform
 
-load_dotenv()
 
-REDIS_CONF = {
-    'host': os.getenv('REDIS_HOST'),
-    'port': os.getenv('REDIS_PORT'),
-    'password': os.getenv('REDIS_PASSWORD')
-}
+redis_settings = RedisSettings()
 
 if __name__ == '__main__':
-    with closing(redis.Redis(**REDIS_CONF)) as redis_conn:
+    with closing(redis.Redis(**redis_settings.dict())) as redis_conn:
         person_extr = PersonExtract(redis_conn)
         genre_extr = GenreExtractor(redis_conn)
         film_work_extr = FilmworkExtractor(redis_conn)

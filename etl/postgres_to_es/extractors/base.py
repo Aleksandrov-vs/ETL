@@ -1,8 +1,9 @@
 import datetime
-import os
 from contextlib import closing
 from typing import List, Union
 from uuid import UUID
+
+from config import PostgresSettings, BackoffConf
 
 import backoff as backoff
 import dotenv
@@ -14,18 +15,9 @@ from redis import connection as redis_connection
 
 dotenv.load_dotenv()
 
-dsl = {
-        'dbname': os.getenv('POSTGRES_DB'),
-        'user': os.getenv('POSTGRES_USER'),
-        'password': os.getenv('POSTGRES_PASSWORD'),
-        'host': os.getenv('POSTGRES_HOST'),
-        'port': os.getenv('POSTGRES_PORT'),
-}
+postgres_settings = PostgresSettings()
 
-BACKOFF_CONF = {
-    'max_time': int(os.getenv('MAX_TIME_BACKOFF')),
-    'max_tries': int(os.getenv('MAX_TRIES_BACKOFF'))
-}
+backoff_conf = BackoffConf()
 
 
 class BasePostgresExtractor:
@@ -65,7 +57,7 @@ class BasePostgresExtractor:
     @backoff.on_exception(
         backoff.expo,
         (OperationalError, ),
-        **BACKOFF_CONF
+        **backoff_conf.dict()
     )
     def bundle_extract_rows(
             self, query: str, values: List, count_row: int = 10
@@ -78,7 +70,7 @@ class BasePostgresExtractor:
         :return:
         """
         with closing(
-            psycopg2.connect(**dsl, connection_factory=RealDictConnection)
+            psycopg2.connect(**postgres_settings.dict(), connection_factory=RealDictConnection)
         ) as pg_conn:
             curs = pg_conn.cursor()
             try:
@@ -97,7 +89,7 @@ class BasePostgresExtractor:
     @backoff.on_exception(
         backoff.expo,
         (OperationalError,),
-        **BACKOFF_CONF
+        **backoff_conf.dict()
     )
     def run_sql_query(self, query: Union[str, Composed], values: list):
         """
@@ -107,7 +99,7 @@ class BasePostgresExtractor:
         :return:
         """
         with closing(
-            psycopg2.connect(**dsl, connection_factory=RealDictConnection)
+            psycopg2.connect(**postgres_settings.dict(), connection_factory=RealDictConnection)
         ) as pg_conn:
             curs = pg_conn.cursor()
             try:

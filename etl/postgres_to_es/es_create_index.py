@@ -1,14 +1,9 @@
-import os
-
-from dotenv import load_dotenv
 from elasticsearch import Elasticsearch
+from config import ElasticSettings
 
-load_dotenv()
+elastic_settings = ElasticSettings()
 
-ELASTIC_URL = os.getenv('ELASTIC_URL')
-ELASTIC_PORT = os.getenv('ELASTIC_PORT')
-
-es = Elasticsearch(f'{ELASTIC_URL}:{ELASTIC_PORT}')
+es = Elasticsearch(f'{elastic_settings.url}:{elastic_settings.port}')
 try:
     # es.options(ignore_status=[400, 404]).indices.delete(index='movies')
     es_settings = {
