@@ -3,11 +3,10 @@ from typing import List
 from uuid import UUID
 
 import dotenv
-from redis import connection as redis_connection
 
-from .base import BasePostgresExtractor
 from storages import State
 
+from .base import BasePostgresExtractor
 
 dotenv.load_dotenv()
 

@@ -1,7 +1,8 @@
 from typing import Dict, List
 
-from models import Actor, Filmwork, Writer
 from psycopg2.extras import RealDictRow
+
+from models import Actor, Filmwork, Writer
 
 
 class DataTransform:

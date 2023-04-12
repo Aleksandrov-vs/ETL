@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 
+import backoff as backoff
 from redis import connection as redis_connection
 from redis.exceptions import ConnectionError
-import backoff as backoff
 
 from config import BackoffConf
 

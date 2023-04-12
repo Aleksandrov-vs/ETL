@@ -1,13 +1,13 @@
 
+import logging
 from typing import List
-
-from models import Filmwork
-from config import ElasticSettings, BackoffConf
 
 import backoff as backoff
 from elastic_transport import ConnectionError, ConnectionTimeout
 from elasticsearch import Elasticsearch, helpers
-import logging
+
+from config import BackoffConf, ElasticSettings
+from models import Filmwork
 
 elastic_settings = ElasticSettings()
 backoff_conf = BackoffConf()
@@ -16,7 +16,9 @@ backoff_conf = BackoffConf()
 class ElasticsearchLoader:
 
     def __init__(self):
-        self.es = Elasticsearch(f'{elastic_settings.url}:{elastic_settings.port}')
+        self.es = Elasticsearch(
+            f'{elastic_settings.url}:{elastic_settings.port}'
+        )
 
     @backoff.on_exception(
         backoff.expo,
@@ -40,4 +42,5 @@ class ElasticsearchLoader:
         success, failed = self.insert_to_elastic(actions)
         logging.info(f'в elasticsearch загружено {success} записей\n')
         if len(failed) > 0:
-            logging.warning(f'при загрузке в elasticsearch возникли ошибки у {len(failed)} записей\n')
+            logging.warning(f'при загрузке в elasticsearch '
+                            f'возникли ошибки у {len(failed)} записей\n')

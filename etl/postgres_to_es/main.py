@@ -1,18 +1,16 @@
-import os
+import logging
 import time
 from contextlib import closing
 
-from config import RedisSettings
-
 import redis
+
+from config import RedisSettings
 from extractors.film_work import FilmworkExtractor
 from extractors.genre import GenreExtractor
 from extractors.person import PersonExtract
 from loader import ElasticsearchLoader
+from storages import RedisStorage, State
 from transformer import DataTransform
-from storages import State, RedisStorage
-import logging
-
 
 redis_settings = RedisSettings()
 

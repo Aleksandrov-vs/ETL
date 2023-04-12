@@ -1,6 +1,8 @@
-from elasticsearch import Elasticsearch
-from config import ElasticSettings
 import logging
+
+from elasticsearch import Elasticsearch
+
+from config import ElasticSettings
 
 elastic_settings = ElasticSettings()
 

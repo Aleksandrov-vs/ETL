@@ -3,10 +3,10 @@ from uuid import UUID
 
 import dotenv
 from psycopg2.extras import RealDictRow
-from redis import connection as redis_connection
+
+from storages import State
 
 from .base import BasePostgresExtractor
-from storages import State
 
 dotenv.load_dotenv()
 

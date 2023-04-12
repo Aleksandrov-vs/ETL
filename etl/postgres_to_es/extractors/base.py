@@ -3,15 +3,15 @@ from contextlib import closing
 from typing import List, Union
 from uuid import UUID
 
-from config import PostgresSettings, BackoffConf
-from storages import State
-
 import backoff as backoff
 import dotenv
 import psycopg2
 from psycopg2 import OperationalError, sql
 from psycopg2.extras import RealDictConnection, RealDictRow
 from psycopg2.sql import Composed
+
+from config import BackoffConf, PostgresSettings
+from storages import State
 
 dotenv.load_dotenv()
 
@@ -69,7 +69,8 @@ class BasePostgresExtractor:
         :return:
         """
         with closing(
-            psycopg2.connect(**postgres_settings.dict(), connection_factory=RealDictConnection)
+            psycopg2.connect(**postgres_settings.dict(),
+                             connection_factory=RealDictConnection)
         ) as pg_conn:
             curs = pg_conn.cursor()
             try:
@@ -98,7 +99,8 @@ class BasePostgresExtractor:
         :return:
         """
         with closing(
-            psycopg2.connect(**postgres_settings.dict(), connection_factory=RealDictConnection)
+            psycopg2.connect(**postgres_settings.dict(),
+                             connection_factory=RealDictConnection)
         ) as pg_conn:
             curs = pg_conn.cursor()
             try:
