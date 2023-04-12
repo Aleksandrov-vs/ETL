@@ -46,7 +46,7 @@ class RedisStorage(AbstractBaseStorage):
 
 
 class State:
-    def __init___(self, storage: AbstractBaseStorage):
+    def __init__(self, storage: AbstractBaseStorage):
         self.storage = storage
 
     def set_state(self, key, val):
