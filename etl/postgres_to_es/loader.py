@@ -7,6 +7,7 @@ from config import ElasticSettings, BackoffConf
 import backoff as backoff
 from elastic_transport import ConnectionError, ConnectionTimeout
 from elasticsearch import Elasticsearch, helpers
+import logging
 
 elastic_settings = ElasticSettings()
 backoff_conf = BackoffConf()
@@ -37,3 +38,6 @@ class ElasticsearchLoader:
             action.update(fw.dict(exclude={'modified', 'created', 'type'}))
             actions.append(action)
         success, failed = self.insert_to_elastic(actions)
+        logging.info(f'в elasticsearch загружено {success} записей\n')
+        if len(failed) > 0:
+            logging.warning(f'при загрузке в elasticsearch возникли ошибки у {len(failed)} записей\n')

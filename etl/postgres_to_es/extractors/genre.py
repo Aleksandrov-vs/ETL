@@ -32,5 +32,4 @@ class GenreExtractor(BasePostgresExtractor):
         film_works_ids_for_update = self.get_film_work_ids_for_update(
             new_genres
         )
-        print(film_works_ids_for_update)
         return self.get_film_works_data(film_works_ids_for_update)

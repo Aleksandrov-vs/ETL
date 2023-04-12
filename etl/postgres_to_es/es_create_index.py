@@ -1,5 +1,6 @@
 from elasticsearch import Elasticsearch
 from config import ElasticSettings
+import logging
 
 elastic_settings = ElasticSettings()
 
@@ -115,4 +116,4 @@ try:
                                settings=es_settings,
                                mappings=es_mapping)
 except Exception as e:
-    print(e)
+    logging.error(e)
